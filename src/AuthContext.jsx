@@ -4,6 +4,7 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -22,8 +23,12 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const setSuccess = (message) => {
+    setSuccessMessage(message);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, successMessage, setSuccess }}>
       {children}
     </AuthContext.Provider>
   );

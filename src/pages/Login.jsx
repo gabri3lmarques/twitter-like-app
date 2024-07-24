@@ -22,7 +22,7 @@ const Login = () => {
       setError('Login falhou. Tente novamente.');
     } else if (users.length > 0) {
       login(users[0]);
-      navigate('/timeline');
+      navigate('/');
     } else {
       setError('Credenciais inválidas.');
     }

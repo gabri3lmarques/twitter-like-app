@@ -1,11 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../AuthContext.jsx';
 import LogoutButton from './LogoutButton.jsx';
 
-
 const Header = () => {
-  const { user } = useContext(AuthContext);
+  const { user, successMessage, setSuccess } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (successMessage) {
+      setTimeout(() => {
+        setSuccess('');
+      }, 3000); // Limpa a mensagem após 5 segundos
+    }
+  }, [successMessage, setSuccess]);
 
   return (
     <header>
@@ -13,7 +20,6 @@ const Header = () => {
       {user ? (
         <>
           <Link to="/create-post">Criar Post</Link>
-          <Link to="/timeline">Timeline</Link>
           <LogoutButton />
         </>
       ) : (
@@ -22,6 +28,7 @@ const Header = () => {
           <Link to="/signup">Cadastro</Link>
         </>
       )}
+      {successMessage && <p>{successMessage}</p>}
     </header>
   );
 };

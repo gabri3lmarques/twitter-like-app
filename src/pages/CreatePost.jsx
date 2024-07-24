@@ -27,8 +27,7 @@ const CreatePost = () => {
     } else {
       setSuccess('Post criado com sucesso!');
       setContent('');
-      // Redirecionar para a timeline após criar o post
-      navigate('/timeline');
+      navigate('/');
     }
   };
 
