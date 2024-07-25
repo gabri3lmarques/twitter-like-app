@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
+import CreatePost from './CreatePost.jsx';
 import supabase from '../supabaseClient';
 import { AuthContext } from '../AuthContext.jsx';
-import CreatePost from './CreatePost.jsx';
 import './timeline.css';
+import likeIcon from '../assets/images/like.svg';
 
 const Timeline = () => {
   const [posts, setPosts] = useState([]);
-  const [limit, setLimit] = useState(10); // Limite inicial de 10 posts
+  const [limit, setLimit] = useState(5); // Limite inicial de 5 posts
   const [hasMore, setHasMore] = useState(true);
   const { user } = useContext(AuthContext);
 
@@ -31,14 +32,12 @@ const Timeline = () => {
         )
       `)
       .order('created_at', { ascending: false })
-      .limit(postLimit); // Limita o número de posts carregados
+      .limit(postLimit);
 
     if (error) {
       console.error('Erro ao buscar posts:', error);
     } else {
-      // Verifica se há mais posts a serem carregados
       setHasMore(data.length === postLimit);
-      // Atualiza os posts com os novos dados
       setPosts(data);
     }
   };
@@ -72,36 +71,55 @@ const Timeline = () => {
     setLimit((prevLimit) => prevLimit + 5); // Incrementa o limite de posts em 5
   };
 
-  return (
-    <div className='timeline'>
+  const handlePostCreated = () => {
+    fetchPosts(limit);
+  };
 
-      {posts.length === 0 ? (
-        <p>Nenhum post encontrado.</p>
-      ) : (
-        <ul>
-          {posts.map((post) => (
-            <li key={post.id}>
-              <p>{post.content}</p>
-              <p><strong>Por:</strong> {post.users?.nickname || 'Anônimo'}</p>
-              <p><strong>Curtidas:</strong> {post.likes?.length || 0}</p>
-              <p>
-                <img
-                  style={{ width: "50px", borderRadius: "25px" }}
-                  src={post.users?.profile_image_url || 'https://users-pictures.surge.sh/users/01/user01.jpeg'}
-                  alt={post.users?.nickname ? `${post.users.nickname}'s profile picture` : 'Imagem de perfil padrão'}
-                />
-              </p>
-              {user && (
-                <button onClick={() => handleLike(post.id)}>Curtir</button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-      {hasMore && (
-        <button onClick={loadMorePosts}>Carregar mais posts</button>
-      )}
-    </div>
+  return (
+    <>
+      <div className='spacer'></div>
+      <div className='timeline'>
+        {user && <CreatePost onPostCreated={handlePostCreated} />} {/* Passa o método onPostCreated */}
+        {posts.length === 0 ? (
+          <p>Nenhum post encontrado.</p>
+        ) : (
+          <div>
+            {posts.map((post) => (
+              <div className='post' key={post.id}>
+                <div className='post__author'>
+                  <div className='post__author-image'>
+                    <img
+                      src={post.users?.profile_image_url || 'https://users-pictures.surge.sh/users/01/user01.jpeg'}
+                      alt={post.users?.nickname ? `${post.users.nickname}'s profile picture` : 'Imagem de perfil padrão'}
+                    />
+                  </div>
+                  <span className='post__user-profile'>@{post.users?.nickname || 'Anônimo'}</span>
+                </div>
+                <p className='post__content'>{post.content}</p>
+                <div className='post__likes-container'>
+                  {user ? (
+                    <>
+                      <img src={likeIcon} className='post_like-button' onClick={() => handleLike(post.id)} />
+                      <span className='post__likes-number'>{post.likes?.length || 0}</span>
+                    </>
+                  ) : (
+                    <>
+                    <img src={likeIcon} />
+                    <span className='post__likes-number'>{post.likes?.length || 0}</span>
+                  </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {hasMore && (
+          <div className="load-more">
+            <button onClick={loadMorePosts}>Carregar mais posts</button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

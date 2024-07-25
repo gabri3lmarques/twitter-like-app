@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import supabase from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext.jsx';
 import './createpost.css';
 
-const CreatePost = () => {
+const CreatePost = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
-
-    const user = JSON.parse(localStorage.getItem('user'));
 
     if (!user) {
       setError('Você precisa estar logado para criar um post.');
@@ -35,11 +32,8 @@ const CreatePost = () => {
         throw insertError;
       }
 
-      setSuccess('Post criado com sucesso!');
       setContent('');
-      setTimeout(() => {
-        navigate('/');
-      }, 2000); // Redireciona após 2 segundos
+      onPostCreated(); // Chama o método para remontar o Timeline após o post ser criado
 
     } catch (insertError) {
       setError(insertError.message);
@@ -51,15 +45,16 @@ const CreatePost = () => {
       <h3>What are you thinking?</h3>
       <form onSubmit={handleCreatePost}>
         <textarea
-          placeholder="O que está acontecendo?"
+          placeholder="Write here.."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
         />
-        <button type="submit">Postar</button>
+        <div className='create-post__submit'>
+          <button type="submit">Postar</button>
+        </div>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
     </div>
   );
 };

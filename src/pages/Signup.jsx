@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import { AuthContext } from '../AuthContext.jsx';
+import './signup.css';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -46,40 +47,50 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className='signup-component'>
       <h1>Cadastro</h1>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Apelido"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="URL da Imagem de Perfil"
-          value={profileImageUrl}
-          onChange={(e) => setProfileImageUrl(e.target.value)}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Carregando...' : 'Cadastrar'}
-        </button>
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Apelido"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="URL da Imagem de Perfil"
+            value={profileImageUrl}
+            onChange={(e) => setProfileImageUrl(e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Carregando...' : 'Cadastrar'}
+          </button>
+        </div>
       </form>
     </div>
   );

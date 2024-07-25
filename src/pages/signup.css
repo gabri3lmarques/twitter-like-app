@@ -1,4 +1,4 @@
-.login-component {
+.signup-component{
     margin-top: 100px;
     width: 400px;
     margin-left: auto;
@@ -8,7 +8,7 @@
     border: 2px solid #EBEEF0;  
 }
 
-.login-component  input {
+.signup-component input {
     width: 100%;
     outline: 0;
     border: 2px solid #89A2B8;
@@ -17,10 +17,10 @@
     border-radius: 4px;
 }
 
-.login-component  input:focus {
+.signup-component input:focus {
     border: 2px solid #1DA1F2;
 }
 
-.login-component  div {
+.signup-component  div {
 margin-top: 20px;
 }
