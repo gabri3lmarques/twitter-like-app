@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import supabase from '../supabaseClient';
 import { AuthContext } from '../AuthContext.jsx';
+import CreatePost from './CreatePost.jsx';
+import './timeline.css';
 
 const Timeline = () => {
   const [posts, setPosts] = useState([]);
-  const [limit, setLimit] = useState(1); // Limite inicial de 10 posts
+  const [limit, setLimit] = useState(10); // Limite inicial de 10 posts
   const [hasMore, setHasMore] = useState(true);
   const { user } = useContext(AuthContext);
 
@@ -21,7 +23,8 @@ const Timeline = () => {
         created_at,
         user_id,
         users (
-          nickname
+          nickname,
+          profile_image_url
         ),
         likes (
           id
@@ -70,8 +73,8 @@ const Timeline = () => {
   };
 
   return (
-    <div>
-      <h1>Timeline</h1>
+    <div className='timeline'>
+
       {posts.length === 0 ? (
         <p>Nenhum post encontrado.</p>
       ) : (
@@ -81,7 +84,13 @@ const Timeline = () => {
               <p>{post.content}</p>
               <p><strong>Por:</strong> {post.users?.nickname || 'Anônimo'}</p>
               <p><strong>Curtidas:</strong> {post.likes?.length || 0}</p>
-              <p><img style={{width:"50px", borderRadius: "25px"}} src={post.likes?.length || 'https://users-pictures.surge.sh/users/01/user01.jpeg'}></img></p>
+              <p>
+                <img
+                  style={{ width: "50px", borderRadius: "25px" }}
+                  src={post.users?.profile_image_url || 'https://users-pictures.surge.sh/users/01/user01.jpeg'}
+                  alt={post.users?.nickname ? `${post.users.nickname}'s profile picture` : 'Imagem de perfil padrão'}
+                />
+              </p>
               {user && (
                 <button onClick={() => handleLike(post.id)}>Curtir</button>
               )}

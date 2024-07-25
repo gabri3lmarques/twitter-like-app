@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient.js';
-import { AuthContext } from '../AuthContext.jsx'
+import { AuthContext } from '../AuthContext.jsx';
+import './login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='login-component'>
       <h1>Login</h1>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>

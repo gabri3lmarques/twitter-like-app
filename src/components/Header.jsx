@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../AuthContext.jsx';
 import LogoutButton from './LogoutButton.jsx';
+import './header.css';
+import logo from  '../assets/images/logo.svg';
 
 const Header = () => {
   const { user, successMessage, setSuccess } = useContext(AuthContext);
@@ -15,18 +17,19 @@ const Header = () => {
   }, [successMessage, setSuccess]);
 
   return (
-    <header>
-      <Link to="/">Home</Link>
+    <header className="page-header">
+      <Link to="/">
+        <img className='logo' src={logo} />
+      </Link>
       {user ? (
-        <>
-          <Link to="/create-post">Criar Post</Link>
+        <div className='page-header__menu'>
           <LogoutButton />
-        </>
+        </div>
       ) : (
-        <>
+        <div className='page-header__menu'>
           <Link to="/login">Login</Link>
-          <Link to="/signup">Cadastro</Link>
-        </>
+          <Link to="/signup">Signup</Link>
+        </div>
       )}
       {successMessage && <p>{successMessage}</p>}
     </header>

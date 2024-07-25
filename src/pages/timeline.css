@@ -1,0 +1,9 @@
+.timeline {
+    width: 800px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 1px solid #EBEEF0;
+    border-right: 1px solid #EBEEF0;
+    padding: 0 20px;
+}

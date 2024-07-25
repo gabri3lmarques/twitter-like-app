@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import supabase from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import './createpost.css';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
@@ -10,6 +11,8 @@ const CreatePost = () => {
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
     const user = JSON.parse(localStorage.getItem('user'));
 
@@ -18,22 +21,34 @@ const CreatePost = () => {
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from('posts')
-      .insert([{ content, user_id: user.id }]);
+    if (content.length > 280) {
+      setError('O post não pode ter mais de 280 caracteres.');
+      return;
+    }
 
-    if (insertError) {
-      setError(insertError.message);
-    } else {
+    try {
+      const { error: insertError } = await supabase
+        .from('posts')
+        .insert([{ content, user_id: user.id }]);
+
+      if (insertError) {
+        throw insertError;
+      }
+
       setSuccess('Post criado com sucesso!');
       setContent('');
-      navigate('/');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000); // Redireciona após 2 segundos
+
+    } catch (insertError) {
+      setError(insertError.message);
     }
   };
 
   return (
-    <div>
-      <h1>Criar Post</h1>
+    <div className='create-post'>
+      <h3>What are you thinking?</h3>
       <form onSubmit={handleCreatePost}>
         <textarea
           placeholder="O que está acontecendo?"
@@ -43,8 +58,8 @@ const CreatePost = () => {
         />
         <button type="submit">Postar</button>
       </form>
-      {error && <p>{error}</p>}
-      {success && <p>{success}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
     </div>
   );
 };
